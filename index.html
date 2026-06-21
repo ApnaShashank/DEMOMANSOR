@@ -435,13 +435,13 @@
        HERO SECTION
        ---------------------------------------------------- */
     #home {
-      padding-top: var(--space-12);
+      padding-top: var(--space-6);
       padding-bottom: var(--space-12);
     }
 
     @media (min-width: 1024px) {
       #home {
-        padding-top: var(--space-16);
+        padding-top: var(--space-10);
         padding-bottom: var(--space-16);
       }
     }
@@ -486,6 +486,20 @@
 
     .hero-content h1 .hero-highlight {
       color: var(--primary);
+      display: inline-block;
+      transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-highlight.change-out {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+
+    .hero-highlight.change-in {
+      opacity: 0;
+      transform: translateY(12px);
     }
 
     @media (min-width: 480px) {
@@ -1613,16 +1627,10 @@
         <!-- Hero Copy -->
         <div class="hero-content fade-up">
 
-          <!-- Eyebrow badge -->
-          <div class="hero-eyebrow">
-            <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-            Trusted Homeopathic Care
-          </div>
-
           <!-- Main heading -->
           <h1>
             Natural Healing<br>
-            For <span class="hero-highlight">Better Health</span>
+            For <span class="hero-highlight" id="animated-better-health">Better Health</span>
           </h1>
 
           <!-- Description -->
@@ -2402,6 +2410,40 @@
       // Initialize Lucide Icons
       if (typeof lucide !== 'undefined') {
         lucide.createIcons();
+      }
+
+      /* 0. Hero Text Animation */
+      const highlightSpan = document.getElementById('animated-better-health');
+      if (highlightSpan) {
+        const texts = [
+          "Better Health",
+          "Natural Wellness",
+          "Holistic Healing",
+          "Safe Recovery",
+          "Complete Care"
+        ];
+        let currentIdx = 0;
+        
+        setInterval(() => {
+          // Transition out (slide up & fade out)
+          highlightSpan.classList.add('change-out');
+          
+          setTimeout(() => {
+            // Change text content
+            currentIdx = (currentIdx + 1) % texts.length;
+            highlightSpan.textContent = texts[currentIdx];
+            
+            // Position at bottom (slide down & hidden)
+            highlightSpan.classList.remove('change-out');
+            highlightSpan.classList.add('change-in');
+            
+            // Trigger reflow to apply class immediately
+            highlightSpan.offsetHeight;
+            
+            // Transition to normal position (slide up & fade in)
+            highlightSpan.classList.remove('change-in');
+          }, 350); // 350ms matches the 0.35s transition duration
+        }, 3000);
       }
 
       /* 1. Mobile Menu Toggle */
